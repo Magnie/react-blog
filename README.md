@@ -11,12 +11,12 @@ In the long run I hope to make it a template for building sites in the future wh
 Setup for development
 ==
 Starting in `react_blog/`
-1. `cd backend`
-2. `npm start`
+  1. `cd backend`
+  2. `npm start`
 
 (In other tab or window)
-1. `cd frontend`
-1. `npm start`
+  1. `cd frontend`
+  2. `npm start`
 
 Features
 ==
