@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Navbar, Nav, NavItem, Col } from 'react-bootstrap';
+import { Navbar, Nav, NavItem, Col, Panel } from 'react-bootstrap';
 import { Link } from 'react-router'
 import { LinkContainer } from 'react-router-bootstrap'
 
@@ -34,12 +34,17 @@ class Main extends Component {
                         {this.props.children}
                     </Col>
                     <Col md={3}>
-                        
+                        <Panel>
+                            You could put some links here.
+                        </Panel>
                     </Col>
                     <Col md={12}>
-                        Footer
                     </Col>
                 </div>
+                <hr />
+                <Col md={12}>
+                    Copyright &copy; 2016 Joseph Augustine
+                </Col>
             </div>
         );
     }

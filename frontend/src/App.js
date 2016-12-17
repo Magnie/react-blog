@@ -13,7 +13,7 @@ class App extends Component {
             <Router history={hashHistory}>
                 <Route path="/" component={Main}>
                     <IndexRoute component={Home} />
-                    <Route path="page" component={Page} />
+                    <Route path="page/:id" component={Page} />
                 </Route>
             </Router>
         );

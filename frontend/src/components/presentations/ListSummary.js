@@ -8,7 +8,7 @@ class ListSummary extends Component {
                 {this.props.entries.map(
                     function(entry, index) {
                         return (
-                            <EntrySummary key={index} id={index} title={entry.title} entry={entry.entry} />
+                            <EntrySummary key={index} id={entry._id} title={entry.title} created={entry.created} entry={entry.entry} />
                         );
                     }
                 )}
