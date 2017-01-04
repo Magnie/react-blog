@@ -21,11 +21,6 @@ class Main extends Component {
                                     Home
                                 </NavItem>
                             </LinkContainer>
-                            <LinkContainer to="/page">
-                                <NavItem>
-                                    Page
-                                </NavItem>
-                            </LinkContainer>
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>

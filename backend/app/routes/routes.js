@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-// List of APIs
+// List of APIs (or features)
 var user = require('./api/user');
 router.use('/api/user', user);
 

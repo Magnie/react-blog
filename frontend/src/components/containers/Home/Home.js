@@ -1,53 +1,34 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
 import ListSummary from '../../presentations/ListSummary.js'
 import NewPost from '../NewPost/NewPost.js'
-import axios from 'axios'
+import { get_entries, create_entry } from '../../../state/actions.js'
 
 class Home extends Component {
-    componentWillMount() {
-        this.setState({
-            'entries': [],
-        });
-    }
     componentDidMount() {
         this.getPosts();
     }
     newPost = (entry) => {
-        axios.post('/api/blog/entry/create', entry).then(
-            (result) => {
-                if (result.data.count == 1) {
-                    // Could refresh the whole list
-                    // this.getPosts();
-                    
-                    // Or add it to our current list.
-                    var new_state = Object.assign({}, this.state);
-                    new_state.entries.unshift(result.data.document);
-                    this.setState(new_state);
-                    
-                } else {
-                    console.error('Error:', result.data);
-                }
-            }
-        );
+        create_entry(this.props.dispatch, entry.title, entry.content);
     }
     getPosts() {
-        axios.get('/api/blog/entries/1').then(
-            (result) => {
-                var entries = result.data.entries;
-                this.setState({
-                    'entries': entries,
-                });
-            }
-        );
+        get_entries(this.props.dispatch, 1);
     }
     render() {
         return (
             <div className="">
                 <NewPost onSubmit={this.newPost} />
-                <ListSummary entries={this.state.entries} />
+                <ListSummary entries={this.props.entries} />
             </div>
         );
     }
 }
 
-export default Home;
+function mapStateToProps(state) {
+    return {
+        entries: state.entries || [],
+    }
+}
+
+var HomeContainer = connect(mapStateToProps)(Home);
+export default HomeContainer;

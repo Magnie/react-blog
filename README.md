@@ -12,11 +12,15 @@ Setup for development
 ==
 Starting in `react_blog/`
   1. `cd backend`
-  2. `npm start`
+  2. `npm install`
+  3. `npm start`
 
 (In other tab or window)
   1. `cd frontend`
-  2. `npm start`
+  2. `npm install`
+  3. `npm start`
+
+Then open `http://localhost:3000/` in your browser.
 
 Features
 ==

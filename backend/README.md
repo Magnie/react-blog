@@ -1,1 +1,3 @@
-Project structure based on http://www.codekitchen.ca/guide-to-structuring-and-building-a-restful-api-using-express-4/
+## Requirements
+- NodeJs
+- `npm install`

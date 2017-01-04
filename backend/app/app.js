@@ -5,7 +5,7 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var database = require('./config/database.js');
 
-var index = require('./routes/index');
+var index = require('./routes/routes');
 
 var app = express();
 

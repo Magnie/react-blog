@@ -4,20 +4,23 @@ import RichTextEditor from 'react-rte';
 
 class NewPost extends Component {
     componentWillMount() {
-        this.setState({
-            'title': '',
-            'entry': RichTextEditor.createEmptyValue(),
-        });
+        this.reset();
     }
     componentDidMount() {
         this.setState({
+            'title': this.props.title || '',
+            'content': RichTextEditor.createEmptyValue(),
+        });
+    }
+    reset() {
+        this.setState({
             'title': '',
-            'entry': RichTextEditor.createEmptyValue(),
+            'content': RichTextEditor.createEmptyValue(),
         });
     }
     update_rte = (value) => {
         var new_state = Object.assign({}, this.state);
-        new_state.entry = value;
+        new_state.content = value;
         this.setState(new_state);
     }
     update_title = (event) => {
@@ -28,9 +31,12 @@ class NewPost extends Component {
     submit = () => {
         var entry = {
             'title': this.state.title,
-            'entry': this.state.entry.toString('markdown'),
+            'content': this.state.content.toString('markdown'),
         };
         this.props.onSubmit(entry);
+        
+        // Clear the form
+        this.reset();
     }
     render() {
         return (
@@ -39,7 +45,7 @@ class NewPost extends Component {
                     <ControlLabel>Title</ControlLabel>
                     <FormControl type="text" value={this.state.title} onChange={this.update_title} />
                     <ControlLabel>Message</ControlLabel>
-                    <RichTextEditor value={this.state.entry} onChange={this.update_rte} />
+                    <RichTextEditor value={this.state.content} onChange={this.update_rte} />
                 </FormGroup>
                 <Button bsStyle="success" className="pull-right" onClick={this.submit}>Post</Button>
             </Panel>

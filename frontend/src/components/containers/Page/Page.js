@@ -7,11 +7,10 @@ import EntryContent from '../../presentations/EntryContent.js'
 class Page extends Component {
     componentWillMount() {
         this.setState({
-            'entry': {'title': '', 'entry': ''},
+            'entry': {'title': '', 'content': ''},
         });
     }
     componentDidMount() {
-        console.log(this.props);
         axios.get(`/api/blog/entry/${this.props.params.id}`).then(
             (result) => {
                 var entry = result.data.entry;
@@ -25,7 +24,7 @@ class Page extends Component {
         return (
             <Panel>
                 <h1>{this.state.entry.title}</h1>
-                <EntryContent entry={this.state.entry.entry} />
+                <EntryContent content={this.state.entry.content} />
             </Panel>
         );
     }
