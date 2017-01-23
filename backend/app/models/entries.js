@@ -1,5 +1,5 @@
 var mongodb = require('mongodb');
-var base_loader = require('./base_loader');
+var utils = require('./utils');
 
 var versions = {
     1: {
@@ -51,7 +51,7 @@ function get_collection(db) {
 }
 
 function update_latest(doc) {
-    return base_loader.update_latest(versions, version_scripts, version, doc);
+    return utils.update_latest(versions, version_scripts, version, doc);
 }
 
 // Get a single entry
@@ -117,11 +117,7 @@ module.exports.get_entries = get_entries;
 function new_entry(db, data, callback) {
     var collection = get_collection(db);
     
-    var new_data = Object.assign({}, versions[version]);
-    for (item of Object.keys(new_data)) {
-        new_data[item] = null;
-    }
-    new_data.version = version;
+    var new_data = utils.create_new(versions[version], version);
     new_data = Object.assign(new_data, data);
     
     collection.insertOne(new_data, function(error, result) {

@@ -25,7 +25,7 @@ class EntrySummary extends Component {
                     }>
                     <EntryContent content={this.props.content} />
                     <span className="pull-right">
-                        { username }
+                        {username}
                     </span>
                 </Panel>
             </div>

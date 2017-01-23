@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Panel, FormControl, FormGroup, ControlLabel, Button } from 'react-bootstrap';
-import RichTextEditor from 'react-rte';
+import { Editor } from 'react-draft-wysiwyg';
+import draftToMarkdown from 'draftjs-to-markdown';
+import { convertToRaw } from 'draft-js';
 
 class NewPost extends Component {
     componentWillMount() {
@@ -9,13 +11,13 @@ class NewPost extends Component {
     componentDidMount() {
         this.setState({
             'title': this.props.title || '',
-            'content': RichTextEditor.createEmptyValue(),
+            'content': '',
         });
     }
     reset() {
         this.setState({
             'title': '',
-            'content': RichTextEditor.createEmptyValue(),
+            'content': '',
         });
     }
     update_rte = (value) => {
@@ -29,9 +31,11 @@ class NewPost extends Component {
         this.setState(new_state);
     }
     submit = () => {
+        var rawContent = convertToRaw(this.state.content.getCurrentContent());
+        var markup = draftToMarkdown(rawContent);
         var entry = {
             'title': this.state.title,
-            'content': this.state.content.toString('markdown'),
+            'content': markup,
         };
         this.props.onSubmit(entry);
         
@@ -45,8 +49,9 @@ class NewPost extends Component {
                     <ControlLabel>Title</ControlLabel>
                     <FormControl type="text" value={this.state.title} onChange={this.update_title} />
                     <ControlLabel>Message</ControlLabel>
-                    <RichTextEditor value={this.state.content} onChange={this.update_rte} />
+                    <Editor value={this.state.content} onEditorStateChange={this.update_rte} tabIndex={1} />
                 </FormGroup>
+                <hr />
                 <Button bsStyle="success" className="pull-right" onClick={this.submit}>Post</Button>
             </Panel>
         );

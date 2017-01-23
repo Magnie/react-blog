@@ -8,6 +8,9 @@ router.use('/api/user', user);
 var blog = require('./api/blog');
 router.use('/api/blog', blog);
 
+var auth = require('./api/auth');
+router.use('/api/auth', auth);
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.send('You shouldn\'t be accessing this page. Please stick with "/api", thank you!');

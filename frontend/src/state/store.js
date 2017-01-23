@@ -1,8 +1,24 @@
 import { createStore } from 'redux'
 import reducers from './reducers'
 
-let store = createStore(reducers);
-console.log(store);
+
+var storage = localStorage.getItem('react_blog');
+try {
+    storage = JSON.parse(storage);
+} catch (e) {
+    storage = {};
+}
+if (!storage || typeof(storage) !== "object") {
+    storage = {};
+}
+
+let store = createStore(reducers, storage);
+
+var update_storage = function() {
+    var json_state = JSON.stringify(store.getState());
+    localStorage.setItem('react_blog', json_state);
+};
+store.subscribe(update_storage);
 
 module.exports = store;
 
@@ -10,14 +26,6 @@ module.exports = store;
 //     "account": {
 //         "username": "string",
 //         "access": "string"
-//     },
-//     "temp": {
-//         "posts": [],
-//         "current_post": {},
-//         "new_post": {
-//             "title": "string",
-//             "content": "string",
-//         }
 //     },
 //     "location": "string",
 // };

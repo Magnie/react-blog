@@ -29,7 +29,9 @@ Features
 Todo
 ==
 In no particular order:
-- Authentication (including Access Control Lists, yes a little overkill for a blog)
+- Authentication
+- Access Control Lists (yes a little overkill for a blog)
 - Custom page creation
 - Tool to manage navigation links (to custom created pages)
 - Comments
+- Split reducers and actions into separate folders/files related to individual features.

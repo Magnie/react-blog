@@ -1,5 +1,5 @@
 var mongodb = require('mongodb');
-var base_loader = require('./base_loader');
+var utils = require('./utils');
 
 var versions = {
     1: {
@@ -35,8 +35,19 @@ function get_collection(db) {
 }
 
 function update_latest(doc) {
-    return base_loader.update_latest(versions, version_scripts, version, doc);
+    return utils.update_latest(versions, version_scripts, version, doc);
 }
+
+function public_user(doc) {
+    if (!doc) {
+        return doc;
+    }
+    return {
+        id: doc._id,
+        username: doc.username,
+    };
+}
+module.exports.public_user = public_user;
 
 // Get a single entry
 function get_user(db, _id, callback) {
@@ -59,48 +70,93 @@ function get_user(db, _id, callback) {
         }
     );
 }
-module.exports.get_entry = get_entry;
+module.exports.get_user = get_user;
 
-// Get a single entry
-function get_entries(db, offset, callback) {
+function attempt_login(db, username, password, callback) {
     var collection = get_collection(db);
-    var limit = 20;
-    
-    collection.find({}).sort({created: -1}).toArray(function(error, docs) {
-        if (error) {
-            console.log(error);
-            callback([]);
-            return;
+    var query = {
+        username: username.toLowerCase(),
+        passhash: utils.hash_string(password),
+    };
+    collection.findOne(
+        query,
+        function(error, doc) {
+            if (error) {
+                console.error(error);
+                callback(null);
+                return;
+            }
+            if (doc && doc.version) {
+                var item = update_latest(doc);
+                callback(item);
+            } else {
+                callback(null);
+            }
         }
-        var updated_docs = [];
-        for (var doc of docs) {
-            updated_docs.push(
-                update_latest(doc)
-            );
-        }
-        callback(updated_docs);
-    });
+    );
 }
-module.exports.get_entries = get_entries;
+module.exports.attempt_login = attempt_login;
 
 // Create a single entry in the database
-function new_entry(db, data, callback) {
+function create_account(db, username, password, callback) {
     var collection = get_collection(db);
     
-    var new_data = Object.assign({}, versions[version]);
-    for (item of Object.keys(new_data)) {
-        new_data[item] = null;
-    }
-    new_data.version = version;
-    new_data = Object.assign(new_data, data);
-    
-    collection.insertOne(new_data, function(error, result) {
-        if (error) {
-            console.log(error);
-            callback(null);
-            return;
+    // Search for duplicate usernames first.
+    var query = {
+        username: username.toLowerCase(),
+    };
+    collection.findOne(
+        query,
+        function(error, doc) {
+            if (error) {
+                console.error(error);
+                var result = {
+                    insertedCount: 0,
+                    error: 'An error occurred while searching for duplicates.',
+                    doc: null,
+                };
+                callback(result);
+                return;
+            }
+            
+            // If there is a duplicate, respond with an error.
+            if (doc) {
+                var result = {
+                    insertedCount: 0,
+                    error: 'Account already exists with that username.',
+                    doc: null,
+                };
+                callback(result);
+            } else {
+                
+                // If no duplicates were found, create the new account.
+                var data = {
+                    username: username.toLowerCase(),
+                    passhash: utils.hash_string(password),
+                };
+                var new_data = utils.create_new(versions[version], version);
+                new_data = Object.assign(new_data, data);
+                
+                collection.insertOne(new_data, function(error, result) {
+                    if (error) {
+                        console.log(error);
+                        result = {
+                            insertedCount: 0,
+                            error: 'An error occurred during account creation.',
+                            doc: null,
+                        };
+                    } else {
+                        result = {
+                            insertedCount: result.insertedCount,
+                            error: '',
+                            doc: result.ops[0],
+                        };
+                    }
+                    callback(result);
+                });
+            }
         }
-        callback(result);
-    });
+    );
+    
 }
-module.exports.new_entry = new_entry;
+module.exports.create_account = create_account;
