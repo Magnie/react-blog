@@ -20,7 +20,7 @@ var update_storage = function() {
 };
 store.subscribe(update_storage);
 
-module.exports = store;
+export default store;
 
 // var store_format = {
 //     "account": {

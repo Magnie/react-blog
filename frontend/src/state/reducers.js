@@ -56,7 +56,7 @@ const auth_reducer = (state = {}, action) => {
     return new_state;
 };
 
-module.exports = combineReducers({
+export default combineReducers({
     auth: auth_reducer,
     routing: routerReducer(), // Keeps location in sync with store.
 });
